@@ -19,6 +19,9 @@ PYTHON_INTERPRETER = python3
 # PROJECT RULES                                                                 #
 #################################################################################
 
+## ui
+ui:
+	poetry run gradio src/visualization/ui.py
 
 ## dvc repro
 repro: check_commit PIPELINE.md
