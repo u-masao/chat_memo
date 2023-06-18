@@ -1,6 +1,5 @@
 import json
 import logging
-import random
 import re
 import time
 from typing import Dict
@@ -10,41 +9,9 @@ import gradio as gr
 import mlflow
 import openai
 import pandas as pd
-import requests
 import yaml
 
-
-class MiroHandler:
-    '''
-    miro handler
-    '''
-    def __init__(self, access_token, board_id, time_wait=1.0):
-        self.access_token = access_token
-        self.board_id = board_id
-        self.time_wait = time_wait
-
-    def _create_miro_object(self, data, miro_object_type="widgets"):
-        headers = {"Authorization": "Bearer {}".format(self.access_token)}
-        url_create_widget = "https://api.miro.com/v1/boards/{}/{}".format(
-            self.board_id, miro_object_type
-        )
-        response = requests.post(url_create_widget, json=data, headers=headers)
-        print(response.text)
-        time.sleep(self.time_wait)
-        return response.text
-
-    def add_sticky(self, text):
-        data = self.build_sticker_data(text)
-        return self._create_miro_object(data, miro_object_type="widgets")
-
-    def build_sticker_data(self, text):
-        data = {}
-        data["type"] = "sticker"
-        data_style = {}
-        data_style["fontSize"] = 40
-        data["style"] = data_style
-        data["text"] = f"<p>{text}</p>"
-        return data
+from src.utils.miro import MiroHandler
 
 
 def load_credential(credential_path: str) -> Dict:
@@ -60,10 +27,6 @@ def greet(text):
     miro = MiroHandler(access_token=access_token, board_id=BOARD_ID)
     miro.add_sticky(text)
     return "Hello " + text + "!"
-
-
-def randstr(length):
-    return "".join([chr(random.randint(97, 122))] * length)
 
 
 def define_functions():
@@ -95,16 +58,16 @@ def build_prompt():
 
     output_format = """
     ### 出力する際のフォーマット
-    - 20個から30個の転職理由を書くこと
+    - 10個から20個の転職理由を書くこと
     - 日本語で回答を記述すること
     - miro に付箋を貼ること
 
     ### 出力フォーマットの例
     ```
-    - 転職理由1
-    - 転職理由2
-    - 転職理由3
-    - 転職理由4
+    - 転職理由
+    - 転職理由
+    - 転職理由
+    - 転職理由
     ```
 
     ### 禁止事項
@@ -137,6 +100,7 @@ def parse_response(response):
                 # json 文字列を dict に変換
                 arguments_dict = json.loads(arguments)
 
+                # parsing
                 for text in arguments_dict["message"].split("\n"):
                     text = re.sub("^- ", "", text.strip())
                     logger.info(f"text: \n{text}")
@@ -172,12 +136,21 @@ def generate_texts(openai_api_key, kwargs):
         n=kwargs["param_n"],
     )
     elapsed_time = time.time() - start_time
+
+    # logging
     logger.info(f"elapsed_time: {elapsed_time}")
     mlflow.log_metric("elapsed_time", elapsed_time)
+    mlflow.log_metrics(response.usage)
+    mlflow.log_param("model", response.model)
     n_choices = len(response.choices)
     mlflow.llm.log_predictions(
         [""] * n_choices, response.choices, [prompt] * n_choices
     )
+
+    # log response dump
+    openai_response_filepath = "data/interim/openai_response.json"
+    json.dump(response, open(openai_response_filepath, "w"))
+    mlflow.log_artifact(openai_response_filepath)
 
     # parse response
     result_df = parse_response(response)
@@ -185,6 +158,9 @@ def generate_texts(openai_api_key, kwargs):
 
 
 def stick_to_miro(prompt, result_df, access_token, board_id):
+    # init log
+    logger = logging.getLogger(__name__)
+
     # init miro handler
     miro = MiroHandler(access_token=access_token, board_id=board_id)
 
@@ -192,8 +168,18 @@ def stick_to_miro(prompt, result_df, access_token, board_id):
     miro.add_sticky(prompt)
 
     # add sticky of each text
-    for index, row in result_df.iterrows():
-        miro.add_sticky(f"{index:03d}. {row['text']}")
+    sorted_df = (
+        result_df.groupby("text").count()[["index"]].sort_index().reset_index()
+    )
+    sorted_df["ratio"] = 100.0 * sorted_df["index"] / len(sorted_df)
+    for index, row in sorted_df.iterrows():
+        message = f"{index:03d}. {row['text']}({row['ratio']:0.1f})"
+        miro.add_sticky(message)
+        logger.info(message)
+
+    sorted_output_filepath = "data/interim/miro_output.csv"
+    sorted_df.to_csv(sorted_output_filepath)
+    mlflow.log_artifact(sorted_output_filepath)
 
 
 @click.command()
