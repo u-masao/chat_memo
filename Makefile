@@ -23,6 +23,10 @@ PYTHON_INTERPRETER = python3
 ui:
 	poetry run gradio src/visualization/ui.py
 
+## stick memo
+stick_memo:
+	poetry run python -m src.visualization.ui "uXjVM9oIaSw="
+
 ## dvc repro
 repro: check_commit PIPELINE.md
 	poetry run dvc repro || git commit dvc.lock -m '[update] dvc repro'
