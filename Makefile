@@ -25,7 +25,9 @@ ui:
 
 ## stick memo
 stick_memo:
-	poetry run python -m src.visualization.ui "uXjVM9oIaSw="
+	poetry run python -m src.visualization.ui \
+        "uXjVM9oIaSw=" \
+        data/processed/reason_for_changing_jobs.csv
 
 ## dvc repro
 repro: check_commit PIPELINE.md
