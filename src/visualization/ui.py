@@ -9,12 +9,6 @@ import requests
 import yaml
 
 
-def load_credential(credential_path: str) -> Dict:
-    with open(credential_path) as fo:
-        credential = yaml.safe_load(fo)
-    return credential
-
-
 class MiroHandler:
     def __init__(self, access_token, board_id, time_wait=1.0):
         self.access_token = access_token
@@ -43,6 +37,12 @@ class MiroHandler:
         data["style"] = data_style
         data["text"] = f"<p>{text}</p>"
         return data
+
+
+def load_credential(credential_path: str) -> Dict:
+    with open(credential_path) as fo:
+        credential = yaml.safe_load(fo)
+    return credential
 
 
 def greet(text):
