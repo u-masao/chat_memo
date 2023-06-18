@@ -87,3 +87,9 @@ target/
 
 # Mypy cache
 .mypy_cache/
+
+# credential
+/config/credential.yaml
+
+# mlflow cache
+/mlruns/
