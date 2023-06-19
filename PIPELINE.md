@@ -11,5 +11,5 @@ flowchart TD
 	node1["data/interim/generated.csv"]
 	node2["data/raw/generated.json"]
 	node2-->node1
-	node3["data/raw/prompt.json"]
+	node3["data/raw/prompt.txt"]
 ```
