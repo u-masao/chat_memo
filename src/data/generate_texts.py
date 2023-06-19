@@ -130,7 +130,7 @@ def main(**kwargs):
 
     # log response dump
     openai_response_filepath = kwargs["output_generated_filepath"]
-    json.dump(response, open(openai_response_filepath, "w"))
+    json.dump(response, open(openai_response_filepath, "w"), indent=2)
     mlflow.log_artifact(openai_response_filepath)
     prompt_filepath = kwargs["output_prompt_filepath"]
     print(prompt, file=open(prompt_filepath, "w"))
