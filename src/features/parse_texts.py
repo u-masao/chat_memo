@@ -13,7 +13,6 @@ def parse_response(response):
 
     results = []
     for index, choice in enumerate(response["choices"]):
-        lines = []
         if choice["finish_reason"] == "function_call":
             if choice["message"]["function_call"]["name"] == "create_csv_file":
                 # function calling の引数を取得
@@ -24,6 +23,7 @@ def parse_response(response):
                 arguments_dict = json.loads(arguments)
 
                 # parsing
+                lines = []
                 for line in arguments_dict["text"].split("\n"):
                     line = line.strip()
                     logger.info(f"line : \n{line }")
