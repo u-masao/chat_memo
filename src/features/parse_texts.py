@@ -31,7 +31,7 @@ def parse_response(response):
             logger.info(f"line : \n{line }")
             if len(line) > 0:
                 cells = line.split(",")
-                if len(cells) == 3 and cells[0] != column_names[0]:
+                if len(cells) == 3 and cells[1] != column_names[1]:
                     lines.append(cells)
         result_df = pd.DataFrame(lines, columns=column_names).assign(
             index=index
