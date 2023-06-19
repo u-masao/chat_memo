@@ -1,11 +1,11 @@
 stages:
   generate_texts:
     cmd: >-
-      poetry run python -m src.data.generate
+      poetry run python -m src.data.generate_texts
       data/raw/generated.json
       data/raw/prompt.json
     deps:
-    - src/data/generate.py
+    - src/data/generate_texts.py
     outs:
     - data/raw/generated.json
     - data/raw/prompt.json
