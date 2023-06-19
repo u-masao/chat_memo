@@ -4,8 +4,19 @@ stages:
       poetry run python -m src.data.generate_texts
       data/raw/generated.json
       data/raw/prompt.json
+      --param_n=3
     deps:
     - src/data/generate_texts.py
     outs:
     - data/raw/generated.json
     - data/raw/prompt.json
+  parse_texts:
+    cmd: >-
+      poetry run python -m src.features.parse_texts
+      data/raw/generated.json
+      data/interim/generated.csv
+    deps:
+    - src/features/parse_texts
+    - data/raw/generated.json
+    outs:
+    - data/interim/generated.csv
