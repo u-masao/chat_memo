@@ -17,3 +17,19 @@ stages:
       hash: md5
       md5: bc3c082b2437cfdbdcc67201e50ffa2e
       size: 795
+  parse_texts:
+    cmd: poetry run python -m src.features.parse_texts data/raw/generated.json data/interim/generated.csv
+    deps:
+    - path: data/raw/generated.json
+      hash: md5
+      md5: ea6df273c97651109274f67e04cbd4ec
+      size: 14669
+    - path: src/features/parse_texts.py
+      hash: md5
+      md5: 8791e2c98863e18e205dc0517f744f5f
+      size: 2204
+    outs:
+    - path: data/interim/generated.csv
+      hash: md5
+      md5: a227d42afbcc590b4e949075cde4a5b6
+      size: 3
