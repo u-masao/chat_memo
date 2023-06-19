@@ -12,7 +12,7 @@ def parse_response(response):
     logger.info(f"full response: {response}")
 
     results = []
-    for index, choice in enumerate(response.choices):
+    for index, choice in enumerate(response["choices"]):
         lines = []
         if choice["finish_reason"] == "function_call":
             if choice["message"]["function_call"]["name"] == "create_csv_file":
