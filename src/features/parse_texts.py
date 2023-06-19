@@ -17,21 +17,22 @@ def parse_response(response):
             if choice["message"]["function_call"]["name"] == "create_csv_file":
                 # function calling の引数を取得
                 arguments = choice["message"]["function_call"]["arguments"]
-                logger.info(f"arguments: \n{arguments}")
 
                 # json 文字列を dict に変換
                 arguments_dict = json.loads(arguments)
+                messages = arguments_dict["text"]
 
-                # parsing
-                lines = []
-                for line in arguments_dict["text"].split("\n"):
-                    line = line.strip()
-                    logger.info(f"line : \n{line }")
-                    if len(line) > 0:
-                        lines.append(line)
-                results.append(pd.DataFrame({"index": index, "text": lines}))
-        else:
-            logger.info(choice)
+        elif "message" in choice:
+            messages = choice["message"]["content"]
+
+        # parsing
+        lines = []
+        for line in messages.split("\n"):
+            line = line.strip()
+            logger.info(f"line : \n{line }")
+            if len(line) > 0:
+                lines.append(line)
+        results.append(pd.DataFrame({"index": index, "text": lines}))
 
     result_df = pd.concat(results).reset_index(drop=True)
     return result_df
