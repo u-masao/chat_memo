@@ -1,6 +1,24 @@
 chat_memo
 ==============================
 
+## install
+
+make credential file to config/credential.yaml
+
+```
+openai:
+  api_key: "xxxxxxxx"
+miro:
+  access_token: "yyyyyyyy"
+```
+
+install packages and run
+
+```
+poetry install
+make repro
+```
+
 A short description of the project.
 
 Project Organization

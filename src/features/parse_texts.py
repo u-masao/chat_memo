@@ -29,7 +29,9 @@ def parse_response(response):
             line = line.strip()
             logger.info(f"line : \n{line }")
             if len(line) > 0:
-                lines.append(line.split(","))
+                cells = line.split(",")
+                if len(cells) == 3:
+                    lines.append(cells)
         result_df = pd.DataFrame(
             lines, columns=["ネガティブな転職理由", "ポジティブな言い換え", "カテゴリ"]
         ).assign(index=index)
