@@ -19,6 +19,10 @@ PYTHON_INTERPRETER = python3
 # PROJECT RULES                                                                 #
 #################################################################################
 
+## mlflow ui
+mlflow_ui:
+	poetry run mlflow ui
+
 ## ui
 ui:
 	poetry run gradio src/visualization/ui.py
