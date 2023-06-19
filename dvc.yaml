@@ -16,7 +16,7 @@ stages:
       data/raw/generated.json
       data/interim/generated.csv
     deps:
-    - src/features/parse_texts
+    - src/features/parse_texts.py
     - data/raw/generated.json
     outs:
     - data/interim/generated.csv
