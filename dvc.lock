@@ -22,14 +22,14 @@ stages:
     deps:
     - path: data/raw/generated.json
       hash: md5
-      md5: ea6df273c97651109274f67e04cbd4ec
-      size: 14669
+      md5: b88f6170bd109ea8525c25450bcf7b3d
+      size: 40301
     - path: src/features/parse_texts.py
       hash: md5
-      md5: a7844bc6d472a59b7ceb3fdfe1383ebe
-      size: 2087
+      md5: c415c22d95dab220143d0e854163bd6d
+      size: 2308
     outs:
     - path: data/interim/generated.csv
       hash: md5
-      md5: a1313ceadb9c947a6d62968c68506a1d
-      size: 5251
+      md5: bbd76d47cb4a5abbc4ff6897d62a021e
+      size: 15787
