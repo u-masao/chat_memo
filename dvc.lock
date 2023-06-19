@@ -2,6 +2,7 @@ schema: '2.0'
 stages:
   generate_texts:
     cmd: poetry run python -m src.data.generate_texts data/raw/generated.json data/raw/prompt.json
+      --param_n=3
     deps:
     - path: src/data/generate_texts.py
       hash: md5
@@ -10,8 +11,8 @@ stages:
     outs:
     - path: data/raw/generated.json
       hash: md5
-      md5: 4a6b187fa9045752b1e7a44cacf1910e
-      size: 48990
+      md5: ea6df273c97651109274f67e04cbd4ec
+      size: 14669
     - path: data/raw/prompt.json
       hash: md5
       md5: bc3c082b2437cfdbdcc67201e50ffa2e
