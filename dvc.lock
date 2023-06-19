@@ -26,8 +26,8 @@ stages:
       size: 14669
     - path: src/features/parse_texts.py
       hash: md5
-      md5: 79831fb71cff4d7411c61a8121669ff5
-      size: 2136
+      md5: a7844bc6d472a59b7ceb3fdfe1383ebe
+      size: 2087
     outs:
     - path: data/interim/generated.csv
       hash: md5
