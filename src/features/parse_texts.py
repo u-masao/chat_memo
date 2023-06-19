@@ -24,17 +24,18 @@ def parse_response(response):
             messages = choice["message"]["content"]
 
         # parsing
+        column_names = ["ネガティブな転職理由", "ポジティブな言い換え", "カテゴリ"]
         lines = []
         for line in messages.split("\n"):
             line = line.strip()
             logger.info(f"line : \n{line }")
             if len(line) > 0:
                 cells = line.split(",")
-                if len(cells) == 3:
+                if len(cells) == 3 and cells[0] != column_names[0]:
                     lines.append(cells)
-        result_df = pd.DataFrame(
-            lines, columns=["ネガティブな転職理由", "ポジティブな言い換え", "カテゴリ"]
-        ).assign(index=index)
+        result_df = pd.DataFrame(lines, columns=column_names).assign(
+            index=index
+        )
         results.append(result_df)
 
     result_df = pd.concat(results).reset_index(drop=True)
