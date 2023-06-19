@@ -56,8 +56,6 @@ def main(**kwargs):
 
     response = json.load(open(kwargs["input_filepath"], "r"))
     result_df = parse_response(response)
-
-    result_df = pd.DataFrame()
     result_df.to_csv(kwargs["output_filepath"])
 
     # cleanup
