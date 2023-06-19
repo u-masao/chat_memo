@@ -17,10 +17,8 @@ def parse_response(response):
             if choice["message"]["function_call"]["name"] == "create_csv_file":
                 # function calling の引数を取得
                 arguments = choice["message"]["function_call"]["arguments"]
-
                 # json 文字列を dict に変換
-                arguments_dict = json.loads(arguments)
-                messages = arguments_dict["text"]
+                messages = json.loads(arguments)["text"]
 
         elif "message" in choice:
             messages = choice["message"]["content"]
